@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
 const aiRoutes = require('./routes/ai');
@@ -41,11 +41,16 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
-    app.listen(process.env.PORT || 5000, () => console.log(`🚀 Server running on port ${process.env.PORT || 5000}`));
+    app.listen(process.env.PORT || 5000, () => 
+      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`)
+    );
   })
-  .catch(err => { console.error('❌ MongoDB failed:', err.message); process.exit(1); });
+  .catch(err => { 
+    console.error('❌ MongoDB failed:', err.message); 
+    process.exit(1); 
+  });
 
 module.exports = app;
